@@ -12,10 +12,10 @@ import java.util.List;
 
 @Dao
 public interface SenderDao {
-    @Query("SELECT * FROM Sender ORDER BY id")
+    @Query("SELECT * FROM Sender ORDER BY emailAddress")
     LiveData<List<Sender>> loadAllSenders();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertSender(Sender sender);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
@@ -24,6 +24,9 @@ public interface SenderDao {
     @Delete
     void deleteSender(Sender sender);
 
-    @Query("SELECT * FROM Sender WHERE id = :id")
-    LiveData<Sender> loadSenderById(int id);
+    /*@Query("SELECT * FROM Sender WHERE id = :id")
+    LiveData<Sender> loadSenderById(int id);*/
+
+    @Query("SELECT * FROM Sender WHERE emailAddress = :emailAddress")
+    LiveData<Sender> loadSenderByEmailAddress(String emailAddress);
 }

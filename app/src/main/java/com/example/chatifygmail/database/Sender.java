@@ -7,18 +7,17 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Sender {
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    @PrimaryKey
     private String emailAddress;
     private int unread;
 
-    @Ignore
+
     public Sender(String emailAddress, int unread) {
         this.emailAddress = emailAddress;
         this.unread = unread;
     }
 
-    public Sender(int id, String emailAddress, int unread) {
+    /*public Sender(int id, String emailAddress, int unread) {
         this.id = id;
         this.emailAddress = emailAddress;
         this.unread = unread;
@@ -30,7 +29,7 @@ public class Sender {
 
     public void setId(int id) {
         this.id = id;
-    }
+    }*/
 
     public String getEmailAddress() {
         return emailAddress;

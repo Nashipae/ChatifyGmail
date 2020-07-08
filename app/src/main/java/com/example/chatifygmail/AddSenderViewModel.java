@@ -13,8 +13,8 @@ public class AddSenderViewModel extends ViewModel {
 
     // COMPLETED (8) Create a constructor where you call loadTaskById of the taskDao to initialize the tasks variable
     // Note: The constructor should receive the database and the taskId
-    public AddSenderViewModel(AppDatabase database, int senderId) {
-        sender = database.senderDao().loadSenderById(senderId);
+    public AddSenderViewModel(AppDatabase database, String emailAddress) {
+        sender = database.senderDao().loadSenderByEmailAddress(emailAddress);
     }
 
     // COMPLETED (7) Create a getter for the task variable
