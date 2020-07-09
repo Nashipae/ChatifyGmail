@@ -1,10 +1,12 @@
 package com.example.chatifygmail;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -28,6 +30,8 @@ import com.example.chatifygmail.database.Sender;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static android.content.Context.ACTIVITY_SERVICE;
 
 public class UnreadCountWorker extends Worker {
 
@@ -102,22 +106,31 @@ public class UnreadCountWorker extends Worker {
     private void updateUnreadCount() {
         unreadSenders = "";
         unreadSenderCount=0;
+
         for (Sender sender:getSenders()) {
-            Log.i(TAG,"Sender's Email: "+sender.getEmailAddress());
-            Log.i(TAG,"Sender's Unread: "+sender.getEmailAddress());
+            int oldCount=0;
             if(sender.getEmails()!=null)
-            lastMessageNumber = sender.getEmails().get(sender.getEmails().size()-1).getMessageNumber();
+                if(sender.getEmails().size()!=0)
+                    oldCount = sender.getEmails().size();
+            Log.i(TAG,"Sender's Email: "+sender.getEmailAddress());
+            Log.i(TAG,"Sender's Unread: "+sender.getUnread()+"");
+            if(sender.getEmails()!=null)
+                if(sender.getEmails().size()!=0)
+                    lastMessageNumber = sender.getEmails().get(sender.getEmails().size()-1).getMessageNumber();
+            //TODO: Change user and pwd
+
             ArrayList<Email> emails = CheckMail.checkUnreadEmailBySender("imap.gmail.com", "imap", "mightythor.707@gmail.com", "Mightythor@1", sender.getEmailAddress());
             sender.setUnread(emails.size());
             sender.setEmails(emails);
             Log.i(TAG,"Sender's Unread After Update: "+sender.getEmailAddress());
             AppDatabase.getInstance(getApplicationContext()).senderDao().updateSender(sender);
             Log.i(TAG,"Updated");
-            Log.i(TAG,"Received Email Subject: "+emails.get(0).getSubject());
-            int currentLastMessageNumber = emails.get(emails.size()-1).getMessageNumber();
+            //Log.i(TAG,"Received Email Subject: "+emails.get(0).getSubject());
+            int currentLastMessageNumber = 0;
+            //currentLastMessageNumber = emails.get(emails.size()-1).getMessageNumber();
             Log.i(TAG,"Current: "+currentLastMessageNumber);
             Log.i(TAG,"Last: "+lastMessageNumber);
-            if(currentLastMessageNumber>lastMessageNumber){
+            if(currentLastMessageNumber>lastMessageNumber||oldCount<emails.size()){
                 unreadSenders+=sender.getEmailAddress()+System.lineSeparator();
                 unreadSenderCount++;
             }
@@ -142,17 +155,32 @@ public class UnreadCountWorker extends Worker {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
 
+        if(!checkApp()) {
+            NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(), "default")
+                    .setContentTitle(title)
+                    .setContentText("Received new mails from " + unreadSenderCount + " senders")
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(message))
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
 
-        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(), "default")
-                .setContentTitle(title)
-                .setContentText("Received new mails from "+unreadSenderCount+ " senders")
-                .setStyle(new NotificationCompat.BigTextStyle()
-                .bigText(message))
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+            notificationManager.notify(1, notification.build());
+        }
+    }
+    public boolean checkApp(){
+        ActivityManager am = (ActivityManager) getApplicationContext()
+                .getSystemService(ACTIVITY_SERVICE);
 
-        notificationManager.notify(1, notification.build());
+        // get the info from the currently running task
+        List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+
+        ComponentName componentInfo = taskInfo.get(0).topActivity;
+        if (componentInfo.getPackageName().equalsIgnoreCase("com.example.chatifygmail")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

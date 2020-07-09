@@ -3,10 +3,40 @@ package com.example.chatifygmail.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Email{// implements Parcelable {
+public class Email implements Parcelable {
     private String subject;
     private String contents;
     private int messageNumber;
+
+    protected Email(Parcel in) {
+        subject = in.readString();
+        contents = in.readString();
+        messageNumber = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(subject);
+        dest.writeString(contents);
+        dest.writeInt(messageNumber);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Email> CREATOR = new Creator<Email>() {
+        @Override
+        public Email createFromParcel(Parcel in) {
+            return new Email(in);
+        }
+
+        @Override
+        public Email[] newArray(int size) {
+            return new Email[size];
+        }
+    };
 
     public int getMessageNumber() {
         return messageNumber;

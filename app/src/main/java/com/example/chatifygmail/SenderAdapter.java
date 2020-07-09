@@ -1,6 +1,7 @@
 package com.example.chatifygmail;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,20 +74,30 @@ public class SenderAdapter extends RecyclerView.Adapter<SenderAdapter.SenderView
 
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
-            emailTextView = itemView.findViewById(R.id.email_text_view);
+            emailTextView = itemView.findViewById(R.id.email_address_text_view);
 
             unreadView = itemView.findViewById(R.id.unread_text_view);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Intent intent = new Intent(mContext, AddSenderActivity.class);
+                    intent.putExtra(AddSenderActivity.EXTRA_EMAIL_ID, emailTextView.getText());
+                    mContext.startActivity(intent);
+                    return true;
+                }
+            });
+
         }
 
         @Override
         public void onClick(View view) {
-            String emailAddress = senders.get(getAdapterPosition()).getEmailAddress();
-            mItemClickListener.onItemClickListener(emailAddress);
+            Sender sender = senders.get(getAdapterPosition());
+            mItemClickListener.onItemClickListener(sender);
         }
     }
 
     public interface ItemClickListener {
-        void onItemClickListener(String emailAddress);
+        void onItemClickListener(Sender sender);
     }
 }

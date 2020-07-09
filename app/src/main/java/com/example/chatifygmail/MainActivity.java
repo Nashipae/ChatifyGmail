@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
         @SuppressLint("RestrictedApi") PeriodicWorkRequest updateRequest =
                 new PeriodicWorkRequest.Builder(UnreadCountWorker.class, 30, TimeUnit.MINUTES)
                         // Constraints
-                        .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, PeriodicWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
+                        //.setBackoffCriteria(BackoffPolicy.EXPONENTIAL, PeriodicWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
                         .build();
         Log.i(TAG,"Starting request");
         /*OneTimeWorkRequest updateRequest =
@@ -136,10 +136,11 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
     }
 
     @Override
-    public void onItemClickListener(String emailAddress) {
+    public void onItemClickListener(Sender sender) {
         // Launch AddTaskActivity adding the itemId as an extra in the intent
-        Intent intent = new Intent(MainActivity.this, AddSenderActivity.class);
-        intent.putExtra(AddSenderActivity.EXTRA_EMAIL_ID, emailAddress);
+        Log.i(TAG,"Item Clicked");
+        Intent intent = new Intent(MainActivity.this, ShowMailsActivity.class);
+        intent.putExtra("Email Details", sender);
         startActivity(intent);
     }
 
