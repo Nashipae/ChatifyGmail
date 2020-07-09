@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -100,14 +101,16 @@ public class AddSenderActivity extends AppCompatActivity {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                if (emailAddress == DEFAULT_EMAIL_ID) {
+                if (mEmailId == DEFAULT_EMAIL_ID) {
                     // insert new task
                     mDb.senderDao().insertSender(sender);
+                    Log.i(TAG,"Inserted");
                 } else {
                     //update task
                     sender.setEmailAddress(emailAddress);
                     sender.setUnread(unread);
                     mDb.senderDao().updateSender(sender);
+                    Log.i(TAG,"Updated");
                 }
                 finish();
             }

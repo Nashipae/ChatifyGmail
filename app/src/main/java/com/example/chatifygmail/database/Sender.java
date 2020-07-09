@@ -1,5 +1,6 @@
 package com.example.chatifygmail.database;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -8,6 +9,7 @@ import androidx.room.PrimaryKey;
 public class Sender {
 
     @PrimaryKey
+    @NonNull
     private String emailAddress;
     private int unread;
 
