@@ -26,4 +26,7 @@ public interface SenderDao {
 
     @Query("SELECT * FROM Sender WHERE emailAddress = :emailAddress")
     LiveData<Sender> loadSenderByEmailAddress(String emailAddress);
+
+    @Query("SELECT * FROM Sender ORDER BY unread")
+    List<Sender> loadAllSendersSync();
 }

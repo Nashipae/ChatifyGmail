@@ -8,7 +8,14 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.BackoffPolicy;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,7 +26,10 @@ import com.example.chatifygmail.database.AppDatabase;
 import com.example.chatifygmail.database.Sender;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity implements SenderAdapter.ItemClickListener {
@@ -76,7 +86,31 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
         });
         mDb = AppDatabase.getInstance(getApplicationContext());
         setupViewModel();
-        new CheckMailsTask().execute();
+
+        /*@SuppressLint("RestrictedApi") PeriodicWorkRequest updateRequest =
+                new PeriodicWorkRequest.Builder(UnreadCountWorker.class, 30, TimeUnit.MINUTES)
+                        // Constraints
+                        .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, PeriodicWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
+                        .build();*/
+        Log.i(TAG,"Starting request");
+        OneTimeWorkRequest updateRequest =
+                new OneTimeWorkRequest.Builder(UnreadCountWorker.class)
+                        .build();
+        //new CheckMailsTask().execute();
+        WorkManager.getInstance().enqueue(updateRequest);
+
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(updateRequest.getId())
+                .observe(this, new Observer<WorkInfo>() {
+                    @Override
+                    public void onChanged(@Nullable WorkInfo workInfo) {
+                        if (workInfo != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+                            Log.i(TAG,"Work finished!");
+                        }
+                        if (workInfo != null) {
+                            Log.i(TAG,"SimpleWorkRequest: " + workInfo.getState().name() + "\n");
+                        }
+                    }
+                });
     }
 
     private void setupViewModel() {

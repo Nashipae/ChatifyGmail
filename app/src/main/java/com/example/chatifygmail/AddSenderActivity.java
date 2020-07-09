@@ -4,6 +4,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,10 +14,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.chatifygmail.data.Email;
 import com.example.chatifygmail.database.AppDatabase;
 import com.example.chatifygmail.database.Sender;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class AddSenderActivity extends AppCompatActivity {
 
@@ -31,6 +36,7 @@ public class AddSenderActivity extends AppCompatActivity {
 
     private String mEmailId=DEFAULT_EMAIL_ID;
     private int unread=0;
+    private ArrayList<Email> emails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,11 +99,12 @@ public class AddSenderActivity extends AppCompatActivity {
 
         emailEditText.setText(sender.getEmailAddress());
         unread = sender.getUnread();
+        emails = sender.getEmails();
     }
     public void onSaveButtonClicked() {
         final String emailAddress = emailEditText.getText().toString();
 
-        final Sender sender = new Sender(emailAddress, unread);
+        final Sender sender = new Sender(emailAddress, unread, emails);
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -109,9 +116,15 @@ public class AddSenderActivity extends AppCompatActivity {
                     //update task
                     sender.setEmailAddress(emailAddress);
                     sender.setUnread(unread);
+                    sender.setEmails(emails);
                     mDb.senderDao().updateSender(sender);
                     Log.i(TAG,"Updated");
                 }
+                OneTimeWorkRequest updateRequest =
+                        new OneTimeWorkRequest.Builder(UnreadCountWorker.class)
+                                .build();
+                //new CheckMailsTask().execute();
+                WorkManager.getInstance().enqueue(updateRequest);
                 finish();
             }
         });
