@@ -87,16 +87,16 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
         mDb = AppDatabase.getInstance(getApplicationContext());
         setupViewModel();
 
-        /*@SuppressLint("RestrictedApi") PeriodicWorkRequest updateRequest =
+        @SuppressLint("RestrictedApi") PeriodicWorkRequest updateRequest =
                 new PeriodicWorkRequest.Builder(UnreadCountWorker.class, 30, TimeUnit.MINUTES)
                         // Constraints
                         .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, PeriodicWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
-                        .build();*/
+                        .build();
         Log.i(TAG,"Starting request");
-        OneTimeWorkRequest updateRequest =
+        /*OneTimeWorkRequest updateRequest =
                 new OneTimeWorkRequest.Builder(UnreadCountWorker.class)
                         .build();
-        //new CheckMailsTask().execute();
+        //new CheckMailsTask().execute();*/
         WorkManager.getInstance().enqueue(updateRequest);
 
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(updateRequest.getId())
