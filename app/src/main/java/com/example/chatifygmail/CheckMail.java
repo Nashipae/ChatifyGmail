@@ -369,5 +369,33 @@ public class CheckMail {
         return 0;
     }
 
-
+    public int validateMail(String user, String password) {
+        try {
+            Properties properties = new Properties();
+            properties.put("mail_layout.store.protocol", "imaps");
+            properties.put("mail_layout.imaps.port", "993");
+            properties.put("mail_layout.imaps.starttls.enable", "true");
+            Session session = Session.getInstance(properties,
+                    new javax.mail.Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(user, password);
+                        }
+                    });
+            Session emailSession = Session.getDefaultInstance(properties);
+            Store emailStore = emailSession.getStore("imaps");
+            emailStore.connect("imap.gmail.com", user, password);
+            Folder emailFolder = emailStore.getFolder("INBOX");
+            emailFolder.open(Folder.READ_ONLY);
+            Message[] result = emailFolder.getMessages();
+            emailFolder.close(false);
+            emailStore.close();
+            return 0;
+        } catch (AuthenticationFailedException e) {
+            e.printStackTrace();
+            return 1;
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return 2;
+        }
+    }
 }
