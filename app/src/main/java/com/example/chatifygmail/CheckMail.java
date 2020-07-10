@@ -153,7 +153,7 @@ public class CheckMail {
             emails = new ArrayList<>();
             for (int i = 0; i < messages.length; i++) {
                 Message message = messages[i];
-                message.getMessageNumber();
+                //message.getMessageNumber();
                 System.out.println("---------------------------------");
                 System.out.println("Email Number " + (i + 1));
                 System.out.println("Subject: " + message.getSubject());
