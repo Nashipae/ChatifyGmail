@@ -4,10 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.security.keystore.KeyGenParameterSpec;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +20,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.chatifygmail.database.Sender;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 import javax.mail.AuthenticationFailedException;
 
@@ -45,7 +51,11 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
         contentsEditText = findViewById(R.id.mail_content_edit_text);
         sendButton = findViewById(R.id.button_mail_send);
         sendButton.setOnClickListener(this);
-        if(sender.getEmails().size()==0){
+        if(sender.getEmails()==null){
+            errorView.setVisibility(View.VISIBLE);
+            errorView.setText("You have no unread emails from this sender");
+        }
+        else if(sender.getEmails().size()==0){
             errorView.setVisibility(View.VISIBLE);
             errorView.setText("You have no unread emails from this sender");
         }
@@ -63,8 +73,37 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
         String contents = contentsEditText.getText().toString();
         if(!contents.equals("")){
-            //TODO: Change user and pwd
-            EncryptedSharedPreferences sharedPreferences = LoginActivity.getSharedPreferences();
+            //DONE: Change user and pwd
+            EncryptedSharedPreferences sharedPreferences = null;
+            String masterKeyAlias = "";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
+
+                try {
+                    masterKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);
+                } catch (GeneralSecurityException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                masterKeyAlias = BuildConfig.MASTER_KEY;
+            }
+
+            try {
+                sharedPreferences = (EncryptedSharedPreferences) EncryptedSharedPreferences.create(
+                        LoginActivity.PREFS_NAME,
+                        masterKeyAlias,
+                        this,
+                        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                );
+            } catch (GeneralSecurityException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             String username = sharedPreferences.getString("Username","");
             String password = sharedPreferences.getString("Password","");
             new SendMailsTask().execute(username, password, emailSenderView.getText().toString(), "Sent from Chatify", contents);

@@ -42,10 +42,42 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         //SharedPreferences settings = getSharedPreferences(LoginActivity.PREFS_NAME, MODE_PRIVATE);
         //Get "hasLoggedIn" value. If the value doesn't exist yet false is returned
+
+        String masterKeyAlias = "";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
+
+            try {
+                masterKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);
+            } catch (GeneralSecurityException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            masterKeyAlias = BuildConfig.MASTER_KEY;
+        }
+
+        try {
+            sharedPreferences = (EncryptedSharedPreferences) EncryptedSharedPreferences.create(
+                    LoginActivity.PREFS_NAME,
+                    masterKeyAlias,
+                    LoginActivity.this,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            );
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         boolean hasLoggedIn = sharedPreferences.getBoolean("hasLoggedIn", false);
+
         Log.i("LoggedIn", hasLoggedIn + "");
         if (hasLoggedIn) {
-            Toast.makeText(this, "Username: " + sharedPreferences.getString("Username", "") + " Validated", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Logged in as " + sharedPreferences.getString("Username", ""), Toast.LENGTH_LONG).show();
             goToMainActivity();
             finish();
         }
@@ -119,12 +151,12 @@ public class LoginActivity extends AppCompatActivity {
 
                 try {
                     sharedPreferences = (EncryptedSharedPreferences) EncryptedSharedPreferences.create(
-                                    LoginActivity.PREFS_NAME,
-                                    masterKeyAlias,
-                                    LoginActivity.this,
-                                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-                            );
+                            LoginActivity.PREFS_NAME,
+                            masterKeyAlias,
+                            LoginActivity.this,
+                            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                    );
                 } catch (GeneralSecurityException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

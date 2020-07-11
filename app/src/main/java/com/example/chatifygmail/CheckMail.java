@@ -131,7 +131,7 @@ public class CheckMail {
             //emailFolder.open(Folder.READ_ONLY);
             Flags seen = new Flags(Flags.Flag.SEEN);
             FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
-            //TODO: Change receiver email
+            // Change receiver email
             FromTerm fromTerm = new FromTerm(new InternetAddress(fromAddress));
             SearchTerm searchTerm = new AndTerm(unseenFlagTerm, fromTerm);
             //4) retrieve the messages from the folder in an array and print it
@@ -186,7 +186,7 @@ public class CheckMail {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //TODO: Change email
+        // Change email
         return emails;
     }
 

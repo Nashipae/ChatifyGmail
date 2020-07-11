@@ -10,6 +10,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.security.keystore.KeyGenParameterSpec;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -22,6 +24,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -29,6 +32,8 @@ import com.example.chatifygmail.data.Email;
 import com.example.chatifygmail.database.AppDatabase;
 import com.example.chatifygmail.database.Sender;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -86,7 +91,7 @@ public class UnreadCountWorker extends Worker {
         setSenders(AppDatabase.getInstance(getApplicationContext()).senderDao().loadAllSendersSync());
 
         Log.i(TAG,"Got Senders and their number is: "+senders.size());
-        //TODO: Update the counts
+        //DONE: Update the counts
         updateUnreadCount();
         return Result.success();
     }
@@ -119,8 +124,37 @@ public class UnreadCountWorker extends Worker {
             if(sender.getEmails()!=null)
                 if(sender.getEmails().size()!=0)
                     lastMessageNumber = sender.getEmails().get(sender.getEmails().size()-1).getMessageNumber();
-            //TODO: Change user and pwd
-            EncryptedSharedPreferences sharedPreferences = LoginActivity.getSharedPreferences();
+            //DONE: Change user and pwd
+            EncryptedSharedPreferences sharedPreferences = null;
+            String masterKeyAlias = "";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
+
+                try {
+                    masterKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);
+                } catch (GeneralSecurityException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                masterKeyAlias = BuildConfig.MASTER_KEY;
+            }
+
+            try {
+                sharedPreferences = (EncryptedSharedPreferences) EncryptedSharedPreferences.create(
+                        LoginActivity.PREFS_NAME,
+                        masterKeyAlias,
+                        context,
+                        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                );
+            } catch (GeneralSecurityException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             String username = sharedPreferences.getString("Username","");
             String password = sharedPreferences.getString("Password","");
             ArrayList<Email> emails = CheckMail.checkUnreadEmailBySender("imap.gmail.com", "imaps", username, password, sender.getEmailAddress());

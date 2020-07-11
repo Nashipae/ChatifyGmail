@@ -53,7 +53,11 @@ public class MailAdapter extends RecyclerView.Adapter<MailAdapter.MailViewHolder
 
     @Override
     public int getItemCount() {
-        return sender.getEmails().size();
+        if(sender.getEmails()!=null) {
+            return sender.getEmails().size();
+        }
+        else
+            return 0;
     }
 
     public class MailViewHolder extends RecyclerView.ViewHolder {

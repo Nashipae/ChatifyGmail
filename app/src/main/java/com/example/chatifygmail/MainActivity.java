@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.work.BackoffPolicy;
 import androidx.work.Data;
@@ -19,8 +20,11 @@ import androidx.work.WorkManager;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.security.keystore.KeyGenParameterSpec;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +36,8 @@ import com.example.chatifygmail.database.AppDatabase;
 import com.example.chatifygmail.database.Sender;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        errorView = findViewById(R.id.main_error_view);
         errorView.setVisibility(View.GONE);
         mRecyclerView = findViewById(R.id.recyclerViewTasks);
 
@@ -183,8 +190,40 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
     }
 
     private void logout() {
-        EncryptedSharedPreferences sharedPreferences = LoginActivity.getSharedPreferences();
-        sharedPreferences.edit().clear().apply();
+        EncryptedSharedPreferences sharedPreferences = null;
+        String masterKeyAlias = "";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
+
+            try {
+                masterKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);
+            } catch (GeneralSecurityException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            masterKeyAlias = BuildConfig.MASTER_KEY;
+        }
+
+        try {
+            //TODO: Later update the create function and use MasterKey when upgrading to minSDK 23(M)
+            sharedPreferences = (EncryptedSharedPreferences) EncryptedSharedPreferences.create(
+                    LoginActivity.PREFS_NAME,
+                    masterKeyAlias,
+                    this,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            );
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assert sharedPreferences != null;
+        SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
+        sharedPrefsEditor.clear().apply();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
