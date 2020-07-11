@@ -17,6 +17,9 @@ allprojects {
         google()
         jcenter()
     }
+    project.ext {
+        master_key = "\"Hello!@#123ABCxyz\""
+    }
 }
 
 task clean(type: Delete) {

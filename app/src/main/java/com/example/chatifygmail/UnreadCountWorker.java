@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -62,7 +64,7 @@ public class UnreadCountWorker extends Worker {
 
     public UnreadCountWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
-        //this.context = context;
+        this.context = context;
     }
 
     @NonNull
@@ -118,8 +120,10 @@ public class UnreadCountWorker extends Worker {
                 if(sender.getEmails().size()!=0)
                     lastMessageNumber = sender.getEmails().get(sender.getEmails().size()-1).getMessageNumber();
             //TODO: Change user and pwd
-
-            ArrayList<Email> emails = CheckMail.checkUnreadEmailBySender("imap.gmail.com", "imap", "mightythor.707@gmail.com", "Mightythor@1", sender.getEmailAddress());
+            EncryptedSharedPreferences sharedPreferences = LoginActivity.getSharedPreferences();
+            String username = sharedPreferences.getString("Username","");
+            String password = sharedPreferences.getString("Password","");
+            ArrayList<Email> emails = CheckMail.checkUnreadEmailBySender("imap.gmail.com", "imaps", username, password, sender.getEmailAddress());
             sender.setUnread(emails.size());
             sender.setEmails(emails);
             Log.i(TAG,"Sender's Unread After Update: "+sender.getEmailAddress());

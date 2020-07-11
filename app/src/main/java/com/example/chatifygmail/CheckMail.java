@@ -369,7 +369,7 @@ public class CheckMail {
         return 0;
     }
 
-    public int validateMail(String user, String password) {
+    public static int validateMail(String user, String password) {
         try {
             Properties properties = new Properties();
             properties.put("mail_layout.store.protocol", "imaps");

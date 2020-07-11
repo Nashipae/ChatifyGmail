@@ -3,7 +3,9 @@ package com.example.chatifygmail;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.security.crypto.EncryptedSharedPreferences;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -54,7 +56,10 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
         String contents = contentsEditText.getText().toString();
         if(!contents.equals("")){
             //TODO: Change user and pwd
-            new SendMailsTask().execute("mightythor.707@gmail.com","MightyThor@1",emailSenderView.getText().toString(),"Sent from Chatify",contents);
+            EncryptedSharedPreferences sharedPreferences = LoginActivity.getSharedPreferences();
+            String username = sharedPreferences.getString("Username","");
+            String password = sharedPreferences.getString("Password","");
+            new SendMailsTask().execute(username, password, emailSenderView.getText().toString(), "Sent from Chatify", contents);
         }
         else
             Toast.makeText(this,"Contents are empty",Toast.LENGTH_LONG).show();
