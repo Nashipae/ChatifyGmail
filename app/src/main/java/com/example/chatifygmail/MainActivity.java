@@ -13,6 +13,8 @@ import androidx.security.crypto.MasterKeys;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.work.BackoffPolicy;
 import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkInfo;
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
                         OneTimeWorkRequest updateRequest =
                                 new OneTimeWorkRequest.Builder(UnreadCountWorker.class).build();
                         //new CheckMailsTask().execute();*/
-                        WorkManager.getInstance().enqueue(updateRequest);
+                        WorkManager.getInstance().enqueueUniqueWork("CheckMails", ExistingWorkPolicy.KEEP, updateRequest);
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
                 new OneTimeWorkRequest.Builder(UnreadCountWorker.class)
                         .build();
         //new CheckMailsTask().execute();*/
-        WorkManager.getInstance().enqueue(updateRequest);
+        WorkManager.getInstance().enqueueUniquePeriodicWork("CheckMails", ExistingPeriodicWorkPolicy.REPLACE, updateRequest);
 
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(updateRequest.getId())
                 .observe(this, new Observer<WorkInfo>() {
