@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +27,7 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
     private MailAdapter mAdapter;
     private TextView emailSenderView;
     private EditText contentsEditText;
-    private Button sendButton;
+    private ImageButton sendButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
