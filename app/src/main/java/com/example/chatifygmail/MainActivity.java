@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.work.BackoffPolicy;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
@@ -38,8 +39,10 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
     // Member variables for the adapter and RecyclerView
     private RecyclerView mRecyclerView;
     private SenderAdapter mAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private AppDatabase mDb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +55,22 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
         // Initialize the adapter and attach it to the RecyclerView
         mAdapter = new SenderAdapter(this, (SenderAdapter.ItemClickListener) this);
         mRecyclerView.setAdapter(mAdapter);
+
+        swipeRefreshLayout = findViewById(R.id.swipe_container);
+
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        Log.i(TAG, "Starting request");
+                        OneTimeWorkRequest updateRequest =
+                                new OneTimeWorkRequest.Builder(UnreadCountWorker.class).build();
+                        //new CheckMailsTask().execute();*/
+                        WorkManager.getInstance().enqueue(updateRequest);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -92,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
                         // Constraints
                         //.setBackoffCriteria(BackoffPolicy.EXPONENTIAL, PeriodicWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
                         .build();
-        Log.i(TAG,"Starting request");
+        Log.i(TAG, "Starting request");
         /*OneTimeWorkRequest updateRequest =
                 new OneTimeWorkRequest.Builder(UnreadCountWorker.class)
                         .build();
@@ -104,10 +123,10 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
                     @Override
                     public void onChanged(@Nullable WorkInfo workInfo) {
                         if (workInfo != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-                            Log.i(TAG,"Work finished!");
+                            Log.i(TAG, "Work finished!");
                         }
                         if (workInfo != null) {
-                            Log.i(TAG,"SimpleWorkRequest: " + workInfo.getState().name() + "\n");
+                            Log.i(TAG, "SimpleWorkRequest: " + workInfo.getState().name() + "\n");
                         }
                     }
                 });
@@ -124,21 +143,21 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
                 mAdapter.setSenders(senders);
             }
         });*/
-        viewModel.getSenders ().observe (this, (List<Sender>senders) -> {
-            mAdapter.notifyDataSetChanged ();
-            Log.i(TAG,"Dataset Changed");
-            Log.i(TAG,"Senders size: "+senders.size()+"");
-            if(senders.size()==0){
-                Log.i(TAG,"No Emails added yet!!");
+        viewModel.getSenders().observe(this, (List<Sender> senders) -> {
+            mAdapter.notifyDataSetChanged();
+            Log.i(TAG, "Dataset Changed");
+            Log.i(TAG, "Senders size: " + senders.size() + "");
+            if (senders.size() == 0) {
+                Log.i(TAG, "No Emails added yet!!");
             }
-            mAdapter.setSenders (senders);
+            mAdapter.setSenders(senders);
         });
     }
 
     @Override
     public void onItemClickListener(Sender sender) {
         // Launch AddTaskActivity adding the itemId as an extra in the intent
-        Log.i(TAG,"Item Clicked");
+        Log.i(TAG, "Item Clicked");
         Intent intent = new Intent(MainActivity.this, ShowMailsActivity.class);
         intent.putExtra("Email Details", sender);
         startActivity(intent);
@@ -147,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
     private class CheckMailsTask extends AsyncTask<Void, Void, Void> {
 
         protected void onPostExecute(Long result) {
-            Log.i("MainActivity","Finished");
+            Log.i("MainActivity", "Finished");
         }
 
         @Override
