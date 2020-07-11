@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.chatifygmail.database.AppDatabase;
 import com.example.chatifygmail.database.Sender;
@@ -44,13 +45,14 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
     private RecyclerView mRecyclerView;
     private SenderAdapter mAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-
+    private TextView errorView;
     private AppDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        errorView.setVisibility(View.GONE);
         mRecyclerView = findViewById(R.id.recyclerViewTasks);
 
 
@@ -149,10 +151,13 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
         });*/
         viewModel.getSenders().observe(this, (List<Sender> senders) -> {
             mAdapter.notifyDataSetChanged();
+            errorView.setVisibility(View.GONE);
             Log.i(TAG, "Dataset Changed");
             Log.i(TAG, "Senders size: " + senders.size() + "");
             if (senders.size() == 0) {
-                Log.i(TAG, "No Emails added yet!!");
+                errorView.setVisibility(View.VISIBLE);
+                errorView.setText("You have no registered senders");
+                Log.i(TAG, "No Senders added yet!!");
             }
             mAdapter.setSenders(senders);
         });

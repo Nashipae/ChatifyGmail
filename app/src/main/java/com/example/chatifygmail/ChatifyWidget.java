@@ -75,6 +75,9 @@ public class ChatifyWidget extends AppWidgetProvider {
                 widgetString+=sender.getEmailAddress()+" - "+sender.getUnread()+System.lineSeparator();
             }
             widgetText = widgetString;
+            if(widgetText.equals("")){
+                widgetText = "You have no registered senders yet";
+            }
             Log.i("Widget", "Text received: "+widgetText);
             //views.setTextViewText(R.id.appwidget_text, widgetText);
             if (appWidgetManager != null) {

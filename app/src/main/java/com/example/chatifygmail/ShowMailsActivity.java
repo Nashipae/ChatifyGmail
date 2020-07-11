@@ -28,20 +28,27 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
     private TextView emailSenderView;
     private EditText contentsEditText;
     private ImageButton sendButton;
+    private TextView errorView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_mails);
         Sender sender = getIntent().getExtras().getParcelable("Email Details");
-        Log.i(TAG,sender.getEmails().get(0).getSubject());
+        //Log.i(TAG,sender.getEmails().get(0).getSubject());
         //TODO: Later retreive actual mails and show similar to an actual mail when clicked and before that show as a chat
         //TODO: For now store in Database so that works when offline too
+        errorView = findViewById(R.id.show_mails_error_view);
+        errorView.setVisibility(View.GONE);
         emailSenderView = findViewById(R.id.sender_header);
         emailSenderView.setText(sender.getEmailAddress());
         mRecyclerView = findViewById(R.id.mails_recycler_view);
         contentsEditText = findViewById(R.id.mail_content_edit_text);
         sendButton = findViewById(R.id.button_mail_send);
         sendButton.setOnClickListener(this);
+        if(sender.getEmails().size()==0){
+            errorView.setVisibility(View.VISIBLE);
+            errorView.setText("You have no unread emails from this sender");
+        }
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
