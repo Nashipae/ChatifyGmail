@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
                         OneTimeWorkRequest updateRequest =
                                 new OneTimeWorkRequest.Builder(UnreadCountWorker.class).build();
                         //new CheckMailsTask().execute();*/
-                        WorkManager.getInstance().enqueueUniqueWork("CheckMails", ExistingWorkPolicy.KEEP, updateRequest);
+                        WorkManager.getInstance().enqueueUniqueWork("RefreshMails", ExistingWorkPolicy.REPLACE, updateRequest);
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }
@@ -224,8 +224,9 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
             e.printStackTrace();
         }
         assert sharedPreferences != null;
-        SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
-        sharedPrefsEditor.clear().apply();
+        //SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
+        //sharedPrefsEditor.clear().commit();
+        sharedPreferences.edit().clear().commit();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
