@@ -10,6 +10,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.util.Log;
@@ -197,9 +198,9 @@ public class UnreadCountWorker extends Worker {
             NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(), "default")
                     .setContentTitle(title)
                     .setContentText("Received new mails from " + unreadSenderCount + " senders")
-                    .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(message))
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
+                    .setSmallIcon(R.drawable.ic_chatify_notification)
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true);
 
