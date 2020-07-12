@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -23,7 +24,7 @@ public class MainActivityBasicTest {
             new ActivityScenarioRule<MainActivity>(MainActivity.class);
 
     @Test
-    public void clickSenderItem_OpensShowMailsFragment() {
+    public void clickSenderItem_OpensShowMailsActivity() {
         // Find the view & Perform action on view
         onView((withId(R.id.recyclerViewTasks)))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
@@ -32,4 +33,13 @@ public class MainActivityBasicTest {
         onView(withId(R.id.show_mails_linear_layout)).check(matches(isDisplayed()));
     }
 
+    @Test
+    public void longClickSenderItem_OpensAddSenderActivity() {
+        // Find the view & Perform action on view
+        onView((withId(R.id.recyclerViewTasks)))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+
+        // Check if the view does as expected
+        onView(withId(R.id.linearLayout)).check(matches(isDisplayed()));
+    }
 }
