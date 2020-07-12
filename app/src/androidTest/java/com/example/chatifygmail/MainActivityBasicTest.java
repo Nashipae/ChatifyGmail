@@ -33,11 +33,15 @@ public class MainActivityBasicTest {
         onView(withId(R.id.show_mails_linear_layout)).check(matches(isDisplayed()));
     }
 
+    @Rule
+    public ActivityScenarioRule<MainActivity> activityScenarioRule2 =
+            new ActivityScenarioRule<MainActivity>(MainActivity.class);
+
     @Test
-    public void longClickSenderItem_OpensAddSenderActivity() {
+    public void clickFabButton_OpensAddSenderActivity() {
         // Find the view & Perform action on view
-        onView((withId(R.id.recyclerViewTasks)))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+        onView((withId(R.id.fab)))
+                .perform(click());
 
         // Check if the view does as expected
         onView(withId(R.id.linearLayout)).check(matches(isDisplayed()));
