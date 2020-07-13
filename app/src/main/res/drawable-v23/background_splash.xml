@@ -3,10 +3,8 @@
     <item
         android:drawable="@android:color/white"/>
 
-    <item>
-        <bitmap
+    <item
         android:gravity="center"
-        android:src="@mipmap/ic_launcher"/>
-    </item>
+        android:drawable="@drawable/ic_chatify_icon"/>
 
 </layer-list>
