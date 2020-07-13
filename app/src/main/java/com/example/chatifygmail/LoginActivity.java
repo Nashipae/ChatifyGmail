@@ -6,6 +6,7 @@ import androidx.security.crypto.MasterKeys;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,8 +15,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -24,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     private String username;
     private String password;
     private ProgressBar loadingProgressBar;
+    private ImageView posterImageView;
     private static EncryptedSharedPreferences sharedPreferences;
 
     public static EncryptedSharedPreferences getSharedPreferences() {
@@ -42,7 +47,11 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         //SharedPreferences settings = getSharedPreferences(LoginActivity.PREFS_NAME, MODE_PRIVATE);
         //Get "hasLoggedIn" value. If the value doesn't exist yet false is returned
-
+        posterImageView = findViewById(R.id.posterImageView);
+        int width  = Resources.getSystem().getDisplayMetrics().widthPixels;
+        //int height = Resources.getSystem().getDisplayMetrics().heightPixels;
+        int targetHeight = (int) ((2/(float)3)*width);
+        Picasso.get() .load(R.drawable.chatify_poster).resize(width,targetHeight).centerCrop().into(posterImageView);
         String masterKeyAlias = "";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
