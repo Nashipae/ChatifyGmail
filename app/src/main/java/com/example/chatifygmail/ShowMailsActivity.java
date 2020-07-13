@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKey;
 import androidx.security.crypto.MasterKeys;
 
 import android.content.SharedPreferences;
@@ -75,7 +76,7 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
         if(!contents.equals("")){
             //DONE: Change user and pwd
             EncryptedSharedPreferences sharedPreferences = null;
-            String masterKeyAlias = "";
+            /*String masterKeyAlias = "";
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
 
@@ -103,6 +104,52 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            }*/
+            if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M) {
+                String masterKeyAlias = "";
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
+
+                    try {
+                        masterKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);
+                    } catch (GeneralSecurityException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    masterKeyAlias = BuildConfig.MASTER_KEY;
+                }
+
+                try {
+                    sharedPreferences = (EncryptedSharedPreferences) EncryptedSharedPreferences.create(
+                            LoginActivity.PREFS_NAME,
+                            masterKeyAlias,
+                            this,
+                            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                    );
+                } catch (GeneralSecurityException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                try {
+                    sharedPreferences = (EncryptedSharedPreferences) EncryptedSharedPreferences.create(
+                            this,
+                            LoginActivity.PREFS_NAME,
+                            new MasterKey.Builder(this).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build(),
+                            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                    );
+                } catch (GeneralSecurityException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             String username = sharedPreferences.getString("Username","");
             String password = sharedPreferences.getString("Password","");

@@ -2,6 +2,7 @@ package com.example.chatifygmail;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKey;
 import androidx.security.crypto.MasterKeys;
 
 import android.content.Intent;
@@ -52,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         //int height = Resources.getSystem().getDisplayMetrics().heightPixels;
         int targetHeight = (int) ((2/(float)3)*width);
         Picasso.get() .load(R.drawable.chatify_poster).resize(width,targetHeight).centerCrop().into(posterImageView);
-        String masterKeyAlias = "";
+        /*String masterKeyAlias = "";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
 
@@ -80,6 +81,52 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }*/
+        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M) {
+            String masterKeyAlias = "";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
+
+                try {
+                    masterKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);
+                } catch (GeneralSecurityException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                masterKeyAlias = BuildConfig.MASTER_KEY;
+            }
+
+            try {
+                sharedPreferences = (EncryptedSharedPreferences) EncryptedSharedPreferences.create(
+                        LoginActivity.PREFS_NAME,
+                        masterKeyAlias,
+                        LoginActivity.this,
+                        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                );
+            } catch (GeneralSecurityException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            try {
+                sharedPreferences = (EncryptedSharedPreferences) EncryptedSharedPreferences.create(
+                        this,
+                        LoginActivity.PREFS_NAME,
+                        new MasterKey.Builder(this).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build(),
+                        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                );
+            } catch (GeneralSecurityException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         boolean hasLoggedIn = sharedPreferences.getBoolean("hasLoggedIn", false);
