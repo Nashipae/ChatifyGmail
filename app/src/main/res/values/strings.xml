@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ChatifyGmail</string>
+    <string name="app_name">Chatify</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Gmail Address</string>
     <string name="prompt_password">Password</string>

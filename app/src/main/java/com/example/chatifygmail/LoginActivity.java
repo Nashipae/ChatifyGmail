@@ -45,6 +45,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
         setContentView(R.layout.activity_login);
         //SharedPreferences settings = getSharedPreferences(LoginActivity.PREFS_NAME, MODE_PRIVATE);
         //Get "hasLoggedIn" value. If the value doesn't exist yet false is returned
@@ -152,7 +155,16 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login(String username, String password) {
         //int flag = CheckMail.validateMail(username, password);
-        new ValidateMailTask().execute(username, password);
+        if(username.equals("")){
+            loadingProgressBar.setVisibility(View.GONE);
+            Toast.makeText(this,"Username cannot be empty!",Toast.LENGTH_LONG).show();
+        }
+        else if(password.equals("")){
+            loadingProgressBar.setVisibility(View.GONE);
+            Toast.makeText(this,"Password cannot be empty!",Toast.LENGTH_LONG).show();
+        }
+        else
+            new ValidateMailTask().execute(username, password);
         /*if(flag == 0) {
             //User has successfully logged in, save this information
             // We need an Editor object to make preference changes.
