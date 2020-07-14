@@ -12,7 +12,7 @@ import java.util.List;
 
 @Dao
 public interface SenderDao {
-    @Query("SELECT * FROM Sender ORDER BY unread")
+    @Query("SELECT * FROM Sender ORDER BY unread DESC")
     LiveData<List<Sender>> loadAllSenders();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -27,6 +27,6 @@ public interface SenderDao {
     @Query("SELECT * FROM Sender WHERE emailAddress = :emailAddress")
     LiveData<Sender> loadSenderByEmailAddress(String emailAddress);
 
-    @Query("SELECT * FROM Sender ORDER BY unread")
+    @Query("SELECT * FROM Sender ORDER BY unread DESC")
     List<Sender> loadAllSendersSync();
 }

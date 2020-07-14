@@ -4,24 +4,31 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:weightSum="5">
+    android:weightSum="5"
+    android:paddingTop="@dimen/margin_padding_size_medium"
+    android:paddingBottom="@dimen/margin_padding_size_medium"
+    android:background="?android:attr/selectableItemBackground">
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="4"
+        android:layout_weight="4.5"
+        android:layout_gravity="center"
         android:id="@+id/email_address_text_view"
+        android:paddingHorizontal="@dimen/margin_padding_size_small"
         />
 
     <TextView
         android:id="@+id/unread_text_view"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_gravity="center"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:maxWidth="50dp"
+        android:maxHeight="50dp"
+
         android:background="@drawable/priority_circle"
         android:gravity="center"
         android:textAlignment="center"
-        android:textColor="#ffffff"
+        android:textStyle="bold"
         />
 </LinearLayout>

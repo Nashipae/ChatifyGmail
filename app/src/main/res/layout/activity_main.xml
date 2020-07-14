@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:textSize="@dimen/text_size_medium"
         android:id="@+id/main_error_view"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -37,6 +36,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         app:srcCompat="@android:drawable/ic_input_add"
-        android:tint="#ffffff"/>
+        android:tint="#ffffff"
+        app:rippleColor="@color/ripple_material_dark"
+        android:clickable="true"
+        app:elevation="4dp"
+        app:pressedTranslationZ="8dp"
+        />
 
 </FrameLayout>

@@ -206,7 +206,9 @@ public class UnreadCountWorker extends Worker {
             String username = sharedPreferences.getString("Username","");
             String password = sharedPreferences.getString("Password","");
             ArrayList<Email> emails = CheckMail.checkUnreadEmailBySender("imap.gmail.com", "imaps", username, password, sender.getEmailAddress());
-            sender.setUnread(emails.size());
+            if(emails!=null) {
+                sender.setUnread(emails.size());
+            }
             sender.setEmails(emails);
             Log.i(TAG,"Sender's Unread After Update: "+sender.getEmailAddress());
             AppDatabase.getInstance(getApplicationContext()).senderDao().updateSender(sender);
