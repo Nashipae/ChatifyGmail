@@ -8,6 +8,7 @@ import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
 import androidx.security.crypto.MasterKeys;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.security.keystore.KeyGenParameterSpec;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -170,6 +172,8 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
             if(result == 0){
                 Toast.makeText(ShowMailsActivity.this,"Mail sent",Toast.LENGTH_LONG).show();
                 contentsEditText.setText("");
+                hideKeyboard(ShowMailsActivity.this);
+
             }
             if(result==-1){
                 Toast.makeText(ShowMailsActivity.this, "Allow Less Secure Apps in your Gmail to send the mail", Toast.LENGTH_LONG).show();
@@ -183,5 +187,15 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
             return error;
         }
 
+    }
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
