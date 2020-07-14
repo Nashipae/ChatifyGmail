@@ -12,7 +12,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/margin_padding_size_small"
     android:weightSum="10">
     <!--><androidx.appcompat.widget.Toolbar
         android:id="@+id/show_mails_toolbar"
@@ -35,12 +35,15 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:paddingBottom="@dimen/margin_padding_size_small"
         android:layout_weight="9"
         android:id="@+id/mails_recycler_view"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:paddingTop="2dp"
+        android:elevation="4dp"
         android:weightSum="4"
         android:orientation="horizontal">
         <EditText
@@ -56,7 +59,10 @@
             android:text="Send"
             android:src="@drawable/ic_send"
             android:tint="#fff"
-            android:id="@+id/button_mail_send"/>
+            android:id="@+id/button_mail_send"
+            app:rippleColor="@color/ripple_material_dark"
+            android:clickable="true"
+            android:background="@drawable/black_button_ripple_effect"/>
     </LinearLayout>
 
 </LinearLayout>
