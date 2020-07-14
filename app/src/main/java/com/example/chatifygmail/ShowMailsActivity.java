@@ -34,7 +34,7 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
     private static final String TAG = ShowMailsActivity.class.getSimpleName() ;
     private RecyclerView mRecyclerView;
     private MailAdapter mAdapter;
-    private Toolbar showMailsToolbar;
+    //private Toolbar showMailsToolbar;
     private EditText contentsEditText;
     private ImageButton sendButton;
     private TextView errorView;
@@ -42,8 +42,8 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_mails);
-        showMailsToolbar = findViewById(R.id.show_mails_toolbar);
-        setSupportActionBar(showMailsToolbar);
+        //showMailsToolbar = findViewById(R.id.show_mails_toolbar);
+        //setSupportActionBar(showMailsToolbar);
         Sender sender = getIntent().getExtras().getParcelable("Email Details");
         //Log.i(TAG,sender.getEmails().get(0).getSubject());
         //TODO: Later retreive actual mails and show similar to an actual mail when clicked and before that show as a chat

@@ -42,11 +42,14 @@ public class MailAdapter extends RecyclerView.Adapter<MailAdapter.MailViewHolder
     @Override
     public void onBindViewHolder(@NonNull MailViewHolder holder, int position) {
         Email email = sender.getEmails().get(position);
-        holder.emailSubjectView.setText(email.getSubject());
+        String subject = email.getSubject();
+        if(subject==null)
+            subject = "----";
+        String boldSubject = "<b>"+subject+"</b>"+"<br>";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            holder.emailContentView.setText(Html.fromHtml(email.getContents(), Html.FROM_HTML_MODE_COMPACT));
+            holder.emailContentView.setText(Html.fromHtml(boldSubject+(email.getContents().trim()), Html.FROM_HTML_MODE_COMPACT));
         } else {
-            holder.emailContentView.setText(Html.fromHtml(email.getContents()));
+            holder.emailContentView.setText(Html.fromHtml(boldSubject+(email.getContents().trim())));
         }
         //holder.emailContentView.setText(email.getContents());
     }
@@ -61,11 +64,11 @@ public class MailAdapter extends RecyclerView.Adapter<MailAdapter.MailViewHolder
     }
 
     public class MailViewHolder extends RecyclerView.ViewHolder {
-        TextView emailSubjectView;
+        //TextView emailSubjectView;
         TextView emailContentView;
         public MailViewHolder(@NonNull View itemView) {
             super(itemView);
-            emailSubjectView = itemView.findViewById(R.id.email_subject_view);
+            //emailSubjectView = itemView.findViewById(R.id.email_subject_view);
             emailContentView = itemView.findViewById(R.id.email_content_view);
         }
     }
