@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
             Log.i(TAG, "Senders size: " + senders.size() + "");
             if (senders.size() == 0) {
                 errorView.setVisibility(View.VISIBLE);
-                errorView.setText("You have no registered senders");
+                errorView.setText("You have no registered senders. You can add them using the button below!");
                 Log.i(TAG, "No Senders added yet!!");
             }
             mAdapter.setSenders(senders);
