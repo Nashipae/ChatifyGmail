@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
                 new OneTimeWorkRequest.Builder(UnreadCountWorker.class)
                         .build();
         //new CheckMailsTask().execute();*/
-        WorkManager.getInstance().enqueueUniquePeriodicWork("CheckMails", ExistingPeriodicWorkPolicy.REPLACE, updateRequest);
+        WorkManager.getInstance().enqueueUniquePeriodicWork("CheckMails", ExistingPeriodicWorkPolicy.KEEP, updateRequest);
 
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(updateRequest.getId())
                 .observe(this, new Observer<WorkInfo>() {
