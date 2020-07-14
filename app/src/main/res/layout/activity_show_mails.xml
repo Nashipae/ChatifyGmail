@@ -10,12 +10,14 @@
     android:orientation="vertical"
     tools:context=".ShowMailsActivity"
     android:weightSum="10">
-
-    <TextView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/show_mails_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/sender_header"/>
+        android:layout_height="?attr/actionBarSize"
+        android:background="#fff"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <TextView
         android:id="@+id/show_mails_error_view"
@@ -28,7 +30,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"
+        android:layout_weight="9"
         android:id="@+id/mails_recycler_view"/>
     <LinearLayout
         android:layout_width="match_parent"

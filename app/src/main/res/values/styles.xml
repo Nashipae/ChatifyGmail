@@ -19,6 +19,12 @@
     </style>
 
     <style name="FullscreenLoginTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+    <item name="android:statusBarColor" tools:targetApi="m">#fff</item>
+    <item name="android:background">#fff</item>
+    </style>
+
+    <style name="ShowMailsTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:statusBarColor" tools:targetApi="m">#fff</item>
         <item name="android:background">#fff</item>

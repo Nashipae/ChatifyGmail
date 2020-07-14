@@ -1,6 +1,7 @@
 package com.example.chatifygmail;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.security.crypto.EncryptedSharedPreferences;
@@ -20,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.example.chatifygmail.database.Sender;
 
 import java.io.IOException;
@@ -32,7 +34,7 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
     private static final String TAG = ShowMailsActivity.class.getSimpleName() ;
     private RecyclerView mRecyclerView;
     private MailAdapter mAdapter;
-    private TextView emailSenderView;
+    private Toolbar showMailsToolbar;
     private EditText contentsEditText;
     private ImageButton sendButton;
     private TextView errorView;
@@ -40,14 +42,16 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_mails);
+        showMailsToolbar = findViewById(R.id.show_mails_toolbar);
+        setSupportActionBar(showMailsToolbar);
         Sender sender = getIntent().getExtras().getParcelable("Email Details");
         //Log.i(TAG,sender.getEmails().get(0).getSubject());
         //TODO: Later retreive actual mails and show similar to an actual mail when clicked and before that show as a chat
         //TODO: For now store in Database so that works when offline too
         errorView = findViewById(R.id.show_mails_error_view);
         errorView.setVisibility(View.GONE);
-        emailSenderView = findViewById(R.id.sender_header);
-        emailSenderView.setText(sender.getEmailAddress());
+        getSupportActionBar().setTitle(sender.getEmailAddress());
+
         mRecyclerView = findViewById(R.id.mails_recycler_view);
         contentsEditText = findViewById(R.id.mail_content_edit_text);
         sendButton = findViewById(R.id.button_mail_send);
@@ -153,7 +157,7 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
             }
             String username = sharedPreferences.getString("Username","");
             String password = sharedPreferences.getString("Password","");
-            new SendMailsTask().execute(username, password, emailSenderView.getText().toString(), "Sent from Chatify", contents);
+            new SendMailsTask().execute(username, password, getSupportActionBar().getTitle().toString(), "Sent from Chatify", contents);
         }
         else
             Toast.makeText(this,"Contents are empty",Toast.LENGTH_LONG).show();

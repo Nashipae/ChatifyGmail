@@ -4,6 +4,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.work.Constraints;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
@@ -31,6 +34,7 @@ public class AddSenderActivity extends AppCompatActivity {
 
     EditText emailEditText;
     Button addSenderButton;
+
 
     private AppDatabase mDb;
 
@@ -112,19 +116,34 @@ public class AddSenderActivity extends AppCompatActivity {
                     // insert new task
                     mDb.senderDao().insertSender(sender);
                     Log.i(TAG,"Inserted");
-                } else {
+                } else if(!mEmailId.equals(emailAddress)){
                     //update task
+                    //Delete and insert as the Primary key is changed
+                    mDb.senderDao().deleteSenderbyEmail(mEmailId);
                     sender.setEmailAddress(emailAddress);
-                    sender.setUnread(unread);
-                    sender.setEmails(emails);
-                    mDb.senderDao().updateSender(sender);
+                    //sender.setUnread(unread);
+                    //sender.setEmails(emails);
+                    mDb.senderDao().insertSender(sender);
                     Log.i(TAG,"Updated");
                 }
-                OneTimeWorkRequest updateRequest =
+                else if(mEmailId.equals(emailAddress)){
+                    Log.i(TAG, "Email Address not modified");
+                    finish();
+                }
+                /*OneTimeWorkRequest updateRequest =
                         new OneTimeWorkRequest.Builder(UnreadCountWorker.class)
                                 .build();
                 //new CheckMailsTask().execute();
-                WorkManager.getInstance().enqueue(updateRequest);
+                WorkManager.getInstance().enqueue(updateRequest);*/
+                Constraints constraints = new Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build();
+                OneTimeWorkRequest updateRequest =
+                        new OneTimeWorkRequest.Builder(UnreadCountWorker.class)
+                                //.setConstraints(constraints)
+                                .build();
+                //new CheckMailsTask().execute();*/
+                WorkManager.getInstance().enqueueUniqueWork("RefreshMails", ExistingWorkPolicy.REPLACE, updateRequest);
                 finish();
             }
         });

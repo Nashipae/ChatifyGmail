@@ -35,7 +35,10 @@
                 android:resource="@xml/chatify_widget_info" />
         </receiver>
 
-        <activity android:name=".ShowMailsActivity" />
+        <activity
+            android:name=".ShowMailsActivity"
+            android:theme="@style/ShowMailsTheme"/>
+
         <activity android:name=".AddSenderActivity" />
         <activity android:name=".MainActivity"></activity>
     </application>

@@ -24,6 +24,9 @@ public interface SenderDao {
     @Delete
     void deleteSender(Sender sender);
 
+    @Query("DELETE FROM Sender WHERE emailAddress = :emailAddress")
+    void deleteSenderbyEmail(String emailAddress);
+
     @Query("SELECT * FROM Sender WHERE emailAddress = :emailAddress")
     LiveData<Sender> loadSenderByEmailAddress(String emailAddress);
 
