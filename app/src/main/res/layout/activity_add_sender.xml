@@ -21,7 +21,6 @@
         android:layout_weight="1"
         android:autofillHints=""
         android:backgroundTint="@android:color/black"
-        android:ems="10"
         android:hint="Email Address"
         android:inputType="textEmailAddress"
         android:selectAllOnFocus="true"
