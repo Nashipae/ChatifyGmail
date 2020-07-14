@@ -13,9 +13,11 @@ import androidx.security.crypto.MasterKey;
 import androidx.security.crypto.MasterKeys;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.work.BackoffPolicy;
+import androidx.work.Constraints;
 import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkInfo;
@@ -79,8 +81,13 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
                     @Override
                     public void onRefresh() {
                         Log.i(TAG, "Starting request");
+                        Constraints constraints = new Constraints.Builder()
+                                .setRequiredNetworkType(NetworkType.CONNECTED)
+                                .build();
                         OneTimeWorkRequest updateRequest =
-                                new OneTimeWorkRequest.Builder(UnreadCountWorker.class).build();
+                                new OneTimeWorkRequest.Builder(UnreadCountWorker.class)
+                                        .setConstraints(constraints)
+                                        .build();
                         //new CheckMailsTask().execute();*/
                         WorkManager.getInstance().enqueueUniqueWork("RefreshMails", ExistingWorkPolicy.REPLACE, updateRequest);
                         swipeRefreshLayout.setRefreshing(false);
@@ -122,9 +129,13 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
         mDb = AppDatabase.getInstance(getApplicationContext());
         setupViewModel();
 
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
         @SuppressLint("RestrictedApi") PeriodicWorkRequest updateRequest =
                 new PeriodicWorkRequest.Builder(UnreadCountWorker.class, 30, TimeUnit.MINUTES)
                         // Constraints
+                        .setConstraints(constraints)
                         //.setBackoffCriteria(BackoffPolicy.EXPONENTIAL, PeriodicWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
                         .build();
         Log.i(TAG, "Starting request");
