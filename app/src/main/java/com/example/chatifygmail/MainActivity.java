@@ -284,11 +284,12 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
         sharedPreferences.edit().remove("Username").remove("Password").remove("hasLoggedIn").commit();
         //ArrayList<Email> emails = new ArrayList<>();
         //mDb.senderDao().resetTable(emails);
+        new LogoutTask().execute();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         //ArrayList<Email> emails = new ArrayList<>();
         //AppDatabase.getInstance(getApplicationContext()).senderDao().resetTable(emails);
-        new LogoutTask().execute();
+
         finish();
     }
 
