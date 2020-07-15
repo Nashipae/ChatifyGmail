@@ -37,12 +37,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.chatifygmail.data.Email;
 import com.example.chatifygmail.database.AppDatabase;
 import com.example.chatifygmail.database.Sender;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -285,8 +287,12 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
         //SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
         //sharedPrefsEditor.clear().commit();
         sharedPreferences.edit().remove("Username").remove("Password").remove("hasLoggedIn").commit();
+        ArrayList<Email> emails = new ArrayList<>();
+        mDb.senderDao().resetTable(emails);
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+        //ArrayList<Email> emails = new ArrayList<>();
+        //AppDatabase.getInstance(getApplicationContext()).senderDao().resetTable(emails);
         finish();
     }
 

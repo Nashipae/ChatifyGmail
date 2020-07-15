@@ -8,6 +8,9 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.example.chatifygmail.data.Email;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -32,4 +35,7 @@ public interface SenderDao {
 
     @Query("SELECT * FROM Sender ORDER BY unread DESC")
     List<Sender> loadAllSendersSync();
+
+    @Query("UPDATE Sender SET unread = 0, emails= :emails")
+    void resetTable(ArrayList<Email> emails);
 }
