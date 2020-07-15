@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
         startActivity(intent);
     }
 
-    private class CheckMailsTask extends AsyncTask<Void, Void, Void> {
+    /*private class CheckMailsTask extends AsyncTask<Void, Void, Void> {
 
         protected void onPostExecute(Long result) {
             Log.i("MainActivity", "Finished");
@@ -316,5 +316,5 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
             CheckMail.main(null);
             return null;
         }
-    }
+    }*/
 }
