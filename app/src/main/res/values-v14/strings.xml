@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="send_button">Send Button</string>
+    <string name="chatify_poster">Chatify Poster</string>
+    <string name="enter_contents">Enter contents</string>
+    <string name="send">Send</string>
+    <string name="logout">Logout</string>
+    <string name="update">Update</string>
+    <string name="no_sender_message">You have no registered senders. You can add them using the button below!</string>
+</resources>

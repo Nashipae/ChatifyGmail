@@ -1,7 +1,6 @@
 package com.example.chatifygmail;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.security.crypto.EncryptedSharedPreferences;
@@ -9,7 +8,6 @@ import androidx.security.crypto.MasterKey;
 import androidx.security.crypto.MasterKeys;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +15,6 @@ import android.security.keystore.KeyGenParameterSpec;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -28,8 +25,6 @@ import com.example.chatifygmail.database.Sender;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-
-import javax.mail.AuthenticationFailedException;
 
 public class ShowMailsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -60,11 +55,11 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
         sendButton.setOnClickListener(this);
         if(sender.getEmails()==null){
             errorView.setVisibility(View.VISIBLE);
-            errorView.setText("You have no unread emails from this sender");
+            errorView.setText(R.string.no_emails_message);
         }
         else if(sender.getEmails().size()==0){
             errorView.setVisibility(View.VISIBLE);
-            errorView.setText("You have no unread emails from this sender");
+            errorView.setText(R.string.no_emails_message);
         }
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -80,6 +75,7 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
         String contents = contentsEditText.getText().toString();
         if(!contents.equals("")){
+            hideKeyboard(ShowMailsActivity.this);
             //DONE: Change user and pwd
             EncryptedSharedPreferences sharedPreferences = null;
             /*String masterKeyAlias = "";
@@ -172,7 +168,7 @@ public class ShowMailsActivity extends AppCompatActivity implements View.OnClick
             if(result == 0){
                 Toast.makeText(ShowMailsActivity.this,"Mail sent",Toast.LENGTH_LONG).show();
                 contentsEditText.setText("");
-                hideKeyboard(ShowMailsActivity.this);
+
 
             }
             if(result==-1){

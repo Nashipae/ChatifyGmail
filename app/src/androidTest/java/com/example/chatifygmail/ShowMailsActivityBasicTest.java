@@ -2,21 +2,15 @@ package com.example.chatifygmail;
 
 import android.content.Intent;
 
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import com.example.chatifygmail.database.Sender;
-import com.google.gson.Gson;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static android.app.PendingIntent.getActivity;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;

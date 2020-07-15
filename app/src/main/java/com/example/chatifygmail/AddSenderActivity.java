@@ -22,8 +22,6 @@ import com.example.chatifygmail.database.AppDatabase;
 import com.example.chatifygmail.database.Sender;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class AddSenderActivity extends AppCompatActivity {
 
@@ -54,7 +52,7 @@ public class AddSenderActivity extends AppCompatActivity {
         initViews();
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_EMAIL_ID)) {
-            addSenderButton.setText("Update");
+            addSenderButton.setText(R.string.update);
             if (mEmailId == DEFAULT_EMAIL_ID) {
                 // populate the UI
                 mEmailId = intent.getStringExtra(EXTRA_EMAIL_ID);

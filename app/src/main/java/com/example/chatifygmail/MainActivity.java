@@ -12,9 +12,7 @@ import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
 import androidx.security.crypto.MasterKeys;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
-import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
@@ -25,7 +23,6 @@ import androidx.work.WorkManager;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,9 +42,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -179,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
             Log.i(TAG, "Senders size: " + senders.size() + "");
             if (senders.size() == 0) {
                 errorView.setVisibility(View.VISIBLE);
-                errorView.setText("You have no registered senders. You can add them using the button below!");
+                errorView.setText(R.string.no_sender_message);
                 Log.i(TAG, "No Senders added yet!!");
             }
             mAdapter.setSenders(senders);
@@ -287,12 +282,13 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
         //SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
         //sharedPrefsEditor.clear().commit();
         sharedPreferences.edit().remove("Username").remove("Password").remove("hasLoggedIn").commit();
-        ArrayList<Email> emails = new ArrayList<>();
-        mDb.senderDao().resetTable(emails);
+        //ArrayList<Email> emails = new ArrayList<>();
+        //mDb.senderDao().resetTable(emails);
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         //ArrayList<Email> emails = new ArrayList<>();
         //AppDatabase.getInstance(getApplicationContext()).senderDao().resetTable(emails);
+        new LogoutTask().execute();
         finish();
     }
 
@@ -317,4 +313,17 @@ public class MainActivity extends AppCompatActivity implements SenderAdapter.Ite
             return null;
         }
     }*/
+    private class LogoutTask extends AsyncTask<Void, Void, Void> {
+
+        protected void onPostExecute(Long result) {
+            Log.i(TAG, "Logged out");
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            ArrayList<Email> emails = new ArrayList<>();
+            mDb.senderDao().resetTable(emails);
+            return null;
+        }
+    }
 }

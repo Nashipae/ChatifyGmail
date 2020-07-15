@@ -11,4 +11,15 @@
     <string name="login_failed">"Login failed"</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="send_button">Send Button</string>
+    <string name="email_address">Email Address</string>
+    <string name="add_sender">Add Sender</string>
+    <string name="chatify_poster">Chatify Poster</string>
+    <string name="textview">TextView</string>
+    <string name="enter_contents">Enter contents</string>
+    <string name="send">Send</string>
+    <string name="logout">Logout</string>
+    <string name="update">Update</string>
+    <string name="no_sender_message">You have no registered senders. You can add them using the button below!</string>
+    <string name="no_emails_message">You have no unread emails from this sender</string>
 </resources>

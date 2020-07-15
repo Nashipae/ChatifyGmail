@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#09C"
+    android:background="#fff"
     android:padding="@dimen/widget_margin">
 
     <TextView
@@ -23,7 +23,7 @@
         android:scrollbars="vertical"
         android:text="@string/appwidget_text"
         android:textAlignment="textStart"
-        android:textColor="#ffffff"
+        android:textColor="#000"
         android:textSize="16sp">
 
         <requestFocus

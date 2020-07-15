@@ -5,13 +5,11 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.example.chatifygmail.data.Email;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class Sender implements Parcelable {

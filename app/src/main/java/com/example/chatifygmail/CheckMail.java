@@ -1,8 +1,6 @@
 package com.example.chatifygmail;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.chatifygmail.data.Email;
 import com.sun.mail.pop3.POP3Store;
@@ -10,7 +8,6 @@ import com.sun.mail.pop3.POP3Store;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import javax.mail.AuthenticationFailedException;
