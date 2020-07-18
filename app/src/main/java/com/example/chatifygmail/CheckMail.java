@@ -62,11 +62,11 @@ public class CheckMail {
             Message[] messages = emailFolder.getMessages();
             for (int i = 0; i < messages.length; i++) {
                 Message message = messages[i];
-                System.out.println("---------------------------------");
-                System.out.println("Email Number " + (i + 1));
-                System.out.println("Subject: " + message.getSubject());
-                System.out.println("From: " + message.getFrom()[0]);
-                System.out.println("Text: " + message.getContent().toString());
+                //System.out.println("---------------------------------");
+                //System.out.println("Email Number " + (i + 1));
+                //System.out.println("Subject: " + message.getSubject());
+                //System.out.println("From: " + message.getFrom()[0]);
+                //System.out.println("Text: " + message.getContent().toString());
             }
 
             //5) close the store and folder objects
@@ -76,8 +76,6 @@ public class CheckMail {
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
         } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -151,16 +149,16 @@ public class CheckMail {
             for (int i = 0; i < messages.length; i++) {
                 Message message = messages[i];
                 //message.getMessageNumber();
-                System.out.println("---------------------------------");
-                System.out.println("Email Number " + (i + 1));
-                System.out.println("Subject: " + message.getSubject());
+                //System.out.println("---------------------------------");
+                //System.out.println("Email Number " + (i + 1));
+                //System.out.println("Subject: " + message.getSubject());
                 Log.i("Email Length", i + "");
                 Email email = new Email();
                 //emails[i].setSubject(message.getSubject());
                 email.setSubject(message.getSubject());
                 //email.setSubject(message.getSubject());
-                System.out.println("From: " + message.getFrom()[0]);
-                System.out.println("Text: " + message.getContent().toString());
+                //System.out.println("From: " + message.getFrom()[0]);
+                //System.out.println("Text: " + message.getContent().toString());
                 //emails[i].setContents(message.getContent().toString());
                 //email.setContents(message.getContent().toString());
                 email.setContents(writePart(message));
@@ -205,14 +203,14 @@ public class CheckMail {
     }
 
     public static String writePart(Part p) throws Exception {
-        System.out.println("----------------------------");
-        System.out.println("CONTENT-TYPE: " + p.getContentType());
+        //System.out.println("----------------------------");
+        //System.out.println("CONTENT-TYPE: " + p.getContentType());
 
         //check if the content is plain text
         if (p.isMimeType("text/plain")) {
-            System.out.println("This is plain text");
-            System.out.println("---------------------------");
-            System.out.println((String) p.getContent());
+            //System.out.println("This is plain text");
+            //System.out.println("---------------------------");
+            //System.out.println((String) p.getContent());
             if (fromAddress.contains("gmail.com"))
                 return "";
             else
@@ -220,8 +218,8 @@ public class CheckMail {
         }
         //check if the content has attachment
         else if (p.isMimeType("multipart/*")) {
-            System.out.println("This is a Multipart");
-            System.out.println("---------------------------");
+            //System.out.println("This is a Multipart");
+            //System.out.println("---------------------------");
             Multipart mp = (Multipart) p.getContent();
             int count = mp.getCount();
             Log.i("MIMECount", count + "");
@@ -232,20 +230,20 @@ public class CheckMail {
         }
         //check if the content is a nested message
         else if (p.isMimeType("message/rfc822")) {
-            System.out.println("This is a Nested Message");
-            System.out.println("---------------------------");
+            //System.out.println("This is a Nested Message");
+            //System.out.println("---------------------------");
             String content = "";
             content += writePart((Part) p.getContent());
             return content;
         }
         //check if the content is an inline image
         else if (p.isMimeType("image/jpeg")) {
-            System.out.println("--------> image/jpeg");
+            //System.out.println("--------> image/jpeg");
             Object o = p.getContent();
 
             /*InputStream x = (InputStream) o;
             // Construct the required byte array
-            System.out.println("x.length = " + x.available());
+            //System.out.println("x.length = " + x.available());
             while ((i = (int) ((InputStream) x).available()) > 0) {
                 int result = (int) (((InputStream) x).read(bArray));
                 if (result == -1)
@@ -258,7 +256,7 @@ public class CheckMail {
             f2.write(bArray);*/
             return "<--JPEG Image-->";
         } else if (p.getContentType().contains("image/")) {
-            System.out.println("content type" + p.getContentType());
+            //System.out.println("content type" + p.getContentType());
             /*File f = new File("image" + new Date().getTime() + ".jpg");
             DataOutputStream output = new DataOutputStream(
                     new BufferedOutputStream(new FileOutputStream(f)));
@@ -274,13 +272,13 @@ public class CheckMail {
         } else {
             Object o = p.getContent();
             if (o instanceof String) {
-                System.out.println("This is a string");
-                System.out.println("---------------------------");
-                System.out.println((String) o);
+                //System.out.println("This is a string");
+                //System.out.println("---------------------------");
+                //System.out.println((String) o);
                 return ((String) o);
             } else if (o instanceof InputStream) {
-                System.out.println("This is just an input stream");
-                System.out.println("---------------------------");
+                //System.out.println("This is just an input stream");
+                //System.out.println("---------------------------");
                 InputStream is = (InputStream) o;
                 is = (InputStream) o;
                 int c;
@@ -291,9 +289,9 @@ public class CheckMail {
                 }
                 return content;
             } else {
-                System.out.println("This is an unknown type");
-                System.out.println("---------------------------");
-                System.out.println(o.toString());
+                //System.out.println("This is an unknown type");
+                //System.out.println("---------------------------");
+                //System.out.println(o.toString());
                 return (o.toString());
             }
         }
@@ -355,7 +353,7 @@ public class CheckMail {
 
             // Send message
             Transport.send(message);
-            System.out.println("Sent message successfully....");
+            //System.out.println("Sent message successfully....");
         }
         catch(AuthenticationFailedException afe){
             return -1;
