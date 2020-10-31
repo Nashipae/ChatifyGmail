@@ -4,6 +4,7 @@ An app which keeps track of mails from registered email addresses (referred to a
 ## Screenshots
 ### Login Screen
 ![Login Screen](https://raw.githubusercontent.com/raghuchandan1/ChatifyGmail/update-readme/Login%20Screen.jpg?raw=true "Login Screen")
+<img src="https://raw.githubusercontent.com/raghuchandan1/ChatifyGmail/update-readme/Login%20Screen.jpg" height="1280" width="720">  
 NOTE: Please use an app password from your Google account for signing into the app
 ### Home Page
 Get notified only when you receive emails from contacts on this page without having to hunt for important emails in mailboxes cluttered with promotions and spam. It shows the number of unread emails you have from each contact.  
